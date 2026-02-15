@@ -35,7 +35,29 @@ class ProfitCommand
      */
     public function execute(): int
     {
-        return 0;
+        try {
+            // Get all conversions
+            $conversions = $this->logger->getConversions();
+
+            foreach ($conversions as $index => $conversion) {
+                $from = $conversion['from'];
+                $to = $conversion['to'];
+
+                $profit = $this->converter->calculateProfit($from, $to);
+
+                echo sprintf(
+                    "%d. %s → %s (Profit: %.2f AUD)\n",
+                    $index + 1,
+                    $from,
+                    $to,
+                    $profit
+                );
+            }
+
+            return 0;
+        } catch (\Exception $e) {
+            return 1;
+        }
     }
 
     /**
