@@ -31,6 +31,16 @@ php bin/convert 100 USD AUD
 
 The conversion will be logged to `data/conversions.csv` for profit tracking.
 
+### Challenge 2: Profit Calculation
+
+Calculate total profit from all conversions:
+
+```bash
+php bin/profit
+```
+
+This reads the conversion log and displays profit for each transaction. The company makes 15% profit on each conversion, calculated in AUD.
+
 ## Running Tests
 
 The project includes PHPUnit tests covering the core functionality:
