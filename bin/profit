@@ -1,0 +1,32 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+// Determine the correct autoload path
+$autoloadPaths = [
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../../autoload.php',
+];
+
+$autoloaded = false;
+
+foreach ($autoloadPaths as $autoloadPath) {
+    if (file_exists($autoloadPath)) {
+        require_once $autoloadPath;
+        $autoloaded = true;
+        break;
+    }
+}
+
+if (!$autoloaded) {
+    fwrite(STDERR, "Error: Unable to find autoload.php\n");
+    fwrite(STDERR, "Please run: composer install\n");
+    exit(1);
+}
+
+use Docscentre\CurrencyConverter\Command\ProfitCommand;
+
+// Create and execute the command
+$command = ProfitCommand::create();
+exit($command->execute());

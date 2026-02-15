@@ -38,4 +38,35 @@ class CsvConversionLogger implements ConversionLogger
 
         file_put_contents($this->filePath, $line, FILE_APPEND);
     }
+
+    public function getConversions(): array
+    {
+        if (!file_exists($this->filePath) || filesize($this->filePath) === 0) {
+            return [];
+        }
+
+        $conversions = [];
+        $lines = file($this->filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+        foreach ($lines as $line) {
+            $parts = explode(',', trim($line));
+
+            if (count($parts) !== 2) {
+                continue;
+            }
+
+            // Parse "100.00 USD" format
+            $fromParts = explode(' ', trim($parts[0]));
+            $toParts = explode(' ', trim($parts[1]));
+
+            if (count($fromParts) === 2 && count($toParts) === 2) {
+                $conversions[] = [
+                    'from' => new Currency((float)$fromParts[0], $fromParts[1]),
+                    'to' => new Currency((float)$toParts[0], $toParts[1]),
+                ];
+            }
+        }
+
+        return $conversions;
+    }
 }

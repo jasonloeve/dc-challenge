@@ -35,7 +35,46 @@ class ProfitCommand
      */
     public function execute(): int
     {
-        return 0;
+        try {
+            // Get all conversions
+            $conversions = $this->logger->getConversions();
+
+            if (empty($conversions)) {
+                echo "No conversions found in the log file.\n";
+                echo "Run some conversions first using: php bin/convert\n";
+                return 0;
+            }
+
+            $totalProfit = 0.0;
+            $conversionCount = count($conversions);
+
+            echo "Conversion History & Profit Analysis\n";
+            echo str_repeat('=', 60) . "\n\n";
+
+            foreach ($conversions as $index => $conversion) {
+                $from = $conversion['from'];
+                $to = $conversion['to'];
+
+                $profit = $this->converter->calculateProfit($from, $to);
+
+                echo sprintf(
+                    "%d. %s → %s (Profit: %.2f AUD)\n",
+                    $index + 1,
+                    $from,
+                    $to,
+                    $profit
+                );
+            }
+
+            echo "\n" . str_repeat('=', 60) . "\n";
+            echo sprintf("Total Conversions: %d\n", $conversionCount);
+            echo sprintf("Total Profit: %.2f AUD\n", $totalProfit);
+            echo str_repeat('=', 60) . "\n";
+
+            return 0;
+        } catch (\Exception $e) {
+            return 1;
+        }
     }
 
     /**
