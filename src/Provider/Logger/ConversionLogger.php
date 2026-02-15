@@ -19,4 +19,11 @@ interface ConversionLogger
      * @return void
      */
     public function log(Currency $from, Currency $to): void;
+
+    /**
+     * Get all logged conversions
+     *
+     * @return array Array of conversions [['from' => Currency, 'to' => Currency], ...]
+     */
+    public function getConversions(): array;
 }
