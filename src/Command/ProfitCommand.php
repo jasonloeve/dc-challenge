@@ -56,6 +56,7 @@ class ProfitCommand
                 $to = $conversion['to'];
 
                 $profit = $this->converter->calculateProfit($from, $to);
+                $totalProfit += $profit;
 
                 echo sprintf(
                     "%d. %s → %s (Profit: %.2f AUD)\n",
