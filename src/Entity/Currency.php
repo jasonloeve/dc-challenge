@@ -38,7 +38,7 @@ class Currency
         return $this->code;
     }
 
-    // @NOTE - Look at built in or moving this to a global
+    // @NOTE - Look at built in or moving this to a global, currently has tight coupling and violates SOLID principles.
     public function __toString(): string
     {
         return sprintf('%.2f %s', $this->amount, $this->code);
