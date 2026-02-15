@@ -6,6 +6,7 @@ namespace Docscentre\CurrencyConverter\Command;
 
 use Docscentre\CurrencyConverter\Config\AppConfig;
 use Docscentre\CurrencyConverter\Service\CurrencyConverter;
+use Docscentre\CurrencyConverter\Service\ProfitCalculator;
 use Docscentre\CurrencyConverter\Provider\ExchangeRate\FixedExchangeRateProvider;
 use Docscentre\CurrencyConverter\Provider\Logger\CsvConversionLogger;
 
@@ -17,14 +18,14 @@ use Docscentre\CurrencyConverter\Provider\Logger\CsvConversionLogger;
  */
 class ProfitCommand
 {
-    private CurrencyConverter $converter;
+    private ProfitCalculator $profitCalculator;
     private CsvConversionLogger $logger;
 
     public function __construct(
-        CurrencyConverter $converter,
+        ProfitCalculator $profitCalculator,
         CsvConversionLogger $logger
     ) {
-        $this->converter = $converter;
+        $this->profitCalculator = $profitCalculator;
         $this->logger = $logger;
     }
 
@@ -55,7 +56,7 @@ class ProfitCommand
                 $from = $conversion['from'];
                 $to = $conversion['to'];
 
-                $profit = $this->converter->calculateProfit($from, $to);
+                $profit = $this->profitCalculator->calculateProfit($from, $to);
                 $totalProfit += $profit;
 
                 echo sprintf(
@@ -87,8 +88,9 @@ class ProfitCommand
     {
         $rateProvider = new FixedExchangeRateProvider();
         $converter = new CurrencyConverter($rateProvider);
+        $profitCalculator = new ProfitCalculator($converter);
         $logger = new CsvConversionLogger(AppConfig::getConversionsFilePath());
 
-        return new self($converter, $logger);
+        return new self($profitCalculator, $logger);
     }
 }
