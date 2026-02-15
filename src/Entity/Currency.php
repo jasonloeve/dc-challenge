@@ -14,6 +14,16 @@ class Currency
 
     public function __construct(float $amount, string $code)
     {
+        if ($amount < 0) {
+            throw new \InvalidArgumentException('Amount cannot be negative');
+        }
+
+        $code = trim($code);
+
+        if (empty($code)) {
+            throw new \InvalidArgumentException('Currency code cannot be empty');
+        }
+
         $this->amount = $amount;
         $this->code = strtoupper($code);
     }
