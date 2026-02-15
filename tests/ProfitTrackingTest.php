@@ -6,20 +6,23 @@ namespace Docscentre\CurrencyConverter\Tests;
 
 use Docscentre\CurrencyConverter\Entity\Currency;
 use Docscentre\CurrencyConverter\Service\CurrencyConverter;
+use Docscentre\CurrencyConverter\Service\ProfitCalculator;
 use Docscentre\CurrencyConverter\Provider\ExchangeRate\FixedExchangeRateProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Unit tests for ProfitTracking service
+ * Unit tests for ProfitCalculator service
  */
 class ProfitTrackingTest extends TestCase
 {
     private CurrencyConverter $converter;
+    private ProfitCalculator $profitCalculator;
 
     protected function setUp(): void
     {
         $rateProvider = new FixedExchangeRateProvider();
         $this->converter = new CurrencyConverter($rateProvider);
+        $this->profitCalculator = new ProfitCalculator($this->converter);
     }
 
     public function testCalculateProfitFromUsdToAud(): void
@@ -28,7 +31,7 @@ class ProfitTrackingTest extends TestCase
         $aud = $this->converter->convert($usd, 'AUD');
 
         // @VALIDATE: 100 USD = 150 AUD, Profit = 15% of 150 AUD = 22.50 AUD
-        $profit = $this->converter->calculateProfit($usd, $aud);
+        $profit = $this->profitCalculator->calculateProfit($usd, $aud);
 
         $this->assertEquals(22.50, $profit);
     }
@@ -39,7 +42,7 @@ class ProfitTrackingTest extends TestCase
         $usd = $this->converter->convert($aud, 'USD');
 
         // @VALIDATE: Profit is 15% of source in AUD = 15% of 100 AUD = 15.00 AUD
-        $profit = $this->converter->calculateProfit($aud, $usd);
+        $profit = $this->profitCalculator->calculateProfit($aud, $usd);
 
         $this->assertEquals(15.00, $profit);
     }
@@ -50,7 +53,7 @@ class ProfitTrackingTest extends TestCase
         $eur = $this->converter->convert($gbp, 'EUR');
 
         // @VALIDATE: 100 GBP = 170 AUD, Profit = 15% of 170 AUD = 25.50 AUD
-        $profit = $this->converter->calculateProfit($gbp, $eur);
+        $profit = $this->profitCalculator->calculateProfit($gbp, $eur);
 
         $this->assertEquals(25.50, $profit);
     }
@@ -61,7 +64,7 @@ class ProfitTrackingTest extends TestCase
         $result = $this->converter->convert($aud, 'AUD');
 
         // @VALIDATE: Profit is 15% of 100 AUD = 15.00 AUD
-        $profit = $this->converter->calculateProfit($aud, $result);
+        $profit = $this->profitCalculator->calculateProfit($aud, $result);
 
         $this->assertEquals(15.00, $profit);
     }
