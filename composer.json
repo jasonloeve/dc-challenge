@@ -1,0 +1,17 @@
+{
+    "name": "docscentre/currency-converter",
+    "description": "Docscentre coding challenge currency converter + profit tracking",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Docscentre\\CurrencyConverter\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jason Loeve",
+            "email": "jasonloeve@gmail.com"
+        }
+    ],
+    "require": {}
+}
