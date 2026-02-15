@@ -13,6 +13,24 @@ A PHP command-line application for converting currencies and tracking conversion
 composer install
 ```
 
+## Usage
+
+### Challenge 1: Currency Conversion
+
+Convert between supported currencies using the command line:
+
+```bash
+php bin/convert <amount> <from_currency> <to_currency>
+```
+
+**Example:**
+```bash
+php bin/convert 100 USD AUD
+# Output: Converted: 100.00 USD → 150.00 AUD
+```
+
+The conversion will be logged to `data/conversions.csv` for profit tracking.
+
 ## Running Tests
 
 The project includes PHPUnit tests covering the core functionality:

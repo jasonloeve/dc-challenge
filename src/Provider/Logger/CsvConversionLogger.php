@@ -23,6 +23,11 @@ class CsvConversionLogger implements ConversionLogger
         }
     }
 
+    /**
+     * @NOTE:
+     * In a production with we would have dynamic naming, we would also
+     * likely log more info e.g ID, user ID, date time stamp.
+     */
     public function log(Currency $from, Currency $to): void
     {
         $line = sprintf(
