@@ -13,20 +13,23 @@ use Docscentre\CurrencyConverter\Provider\Logger\CsvConversionLogger;
 /**
  * Command for calculating profit from conversions
  *
- * Reads conversions from the CSV file and calculates total profit in AUD
+ * Reads conversions from the CSV file and calculates total profit in specified currency
  * Company makes 15% profit from each conversion
  */
 class ProfitCommand
 {
     private ProfitCalculator $profitCalculator;
     private CsvConversionLogger $logger;
+    private string $profitCurrency;
 
     public function __construct(
         ProfitCalculator $profitCalculator,
-        CsvConversionLogger $logger
+        CsvConversionLogger $logger,
+        string $profitCurrency = 'AUD'
     ) {
         $this->profitCalculator = $profitCalculator;
         $this->logger = $logger;
+        $this->profitCurrency = $profitCurrency;
     }
 
     /**
@@ -56,21 +59,22 @@ class ProfitCommand
                 $from = $conversion['from'];
                 $to = $conversion['to'];
 
-                $profit = $this->profitCalculator->calculateProfit($from, $to);
+                $profit = $this->profitCalculator->calculateProfit($from, $to, $this->profitCurrency);
                 $totalProfit += $profit;
 
                 echo sprintf(
-                    "%d. %s → %s (Profit: %.2f AUD)\n",
+                    "%d. %s → %s (Profit: %.2f %s)\n",
                     $index + 1,
                     $from,
                     $to,
-                    $profit
+                    $profit,
+                    $this->profitCurrency
                 );
             }
 
             echo "\n" . str_repeat('=', 60) . "\n";
             echo sprintf("Total Conversions: %d\n", $conversionCount);
-            echo sprintf("Total Profit: %.2f AUD\n", $totalProfit);
+            echo sprintf("Total Profit: %.2f %s\n", $totalProfit, $this->profitCurrency);
             echo str_repeat('=', 60) . "\n";
 
             return 0;
@@ -82,15 +86,16 @@ class ProfitCommand
     /**
      * Create an instance with default dependencies
      *
+     * @param string $profitCurrency Currency to display profit in (default: 'AUD')
      * @return self
      */
-    public static function create(): self
+    public static function create(string $profitCurrency = 'AUD'): self
     {
         $rateProvider = new FixedExchangeRateProvider();
         $converter = new CurrencyConverter($rateProvider);
         $profitCalculator = new ProfitCalculator($converter);
         $logger = new CsvConversionLogger(AppConfig::getConversionsFilePath());
 
-        return new self($profitCalculator, $logger);
+        return new self($profitCalculator, $logger, $profitCurrency);
     }
 }
