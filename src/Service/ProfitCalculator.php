@@ -21,23 +21,21 @@ class ProfitCalculator
     }
 
     /**
-     * Calculate profit in AUD from a conversion
-     * Profit is always 15% of the source amount in AUD
+     * Calculate profit in input currency
+     * Profit is always 15% of the source amount in inputted currency
      *
      * @param Currency $from Original currency
      * @param Currency $to Converted currency (@NOTE unused but kept for interface compatibility)
-     * @return float Profit in AUD
+     * @param string $profitCurrency Inputted currency. Default AUD
+     * @return float Profit
      */
-    public function calculateProfit(Currency $from, Currency $to): float
+    public function calculateProfit(Currency $from, Currency $to, string $profitCurrency = 'AUD'): float
     {
-        // Profit is 15% of the source amount in AUD
-        if ($from->getCode() === 'AUD') {
-            return $from->getAmount() * self::PROFIT_RATE;
-        }
+        $profitInSourceCurrency = $from->getAmount() * self::PROFIT_RATE;
 
-        // Convert source to AUD first
-        $fromInAud = $this->converter->convert($from, 'AUD');
+        $profitAmount = new Currency($profitInSourceCurrency, $from->getCode());
+        $profitConverted = $this->converter->convert($profitAmount, $profitCurrency);
 
-        return $fromInAud->getAmount() * self::PROFIT_RATE;
+        return $profitConverted->getAmount();
     }
 }

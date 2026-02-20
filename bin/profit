@@ -27,6 +27,9 @@ if (!$autoloaded) {
 
 use Docscentre\CurrencyConverter\Command\ProfitCommand;
 
+// Get profit currency from command line argument (default: AUD)
+$profitCurrency = $argv[1] ?? 'AUD';
+
 // Create and execute the command
-$command = ProfitCommand::create();
+$command = ProfitCommand::create($profitCurrency);
 exit($command->execute());

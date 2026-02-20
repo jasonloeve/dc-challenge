@@ -36,10 +36,12 @@ The conversion will be logged to `data/conversions.csv` for profit tracking.
 Calculate total profit from all conversions:
 
 ```bash
-php bin/profit
+php bin/profit → shows profit in AUD (default)
+php bin/profit USD → shows profit in USD
+php bin/profit EUR → shows profit in EUR
 ```
 
-This reads the conversion log and displays profit for each transaction. The company makes 15% profit on each conversion, calculated in AUD.
+This reads the conversion log and displays profit for each transaction. The company makes 15% profit on each conversion, calculated in required curency (*Default AUD).
 
 ## Running Tests
 
